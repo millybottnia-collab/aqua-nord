@@ -1,6 +1,7 @@
-"use client";
-
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+// Server Component — renders all content as plain HTML immediately.
+// AnimationLayer is a separate client chunk loaded after JS parses.
+import { Suspense } from "react";
+import AnimationLayer from "@/components/AnimationLayer";
 
 const navLinks = ["Purity", "Process", "Stories", "Contact"];
 
@@ -35,17 +36,20 @@ const steps = [
   {
     number: "01",
     title: "Analyze",
-    description: "We map your source water profile and usage patterns before recommending a system.",
+    description:
+      "We map your source water profile and usage patterns before recommending a system.",
   },
   {
     number: "02",
     title: "Purify",
-    description: "Layered membranes and carbon media remove contaminants with quiet precision.",
+    description:
+      "Layered membranes and carbon media remove contaminants with quiet precision.",
   },
   {
     number: "03",
     title: "Maintain",
-    description: "Smart filter tracking keeps quality stable with timely service and replacements.",
+    description:
+      "Smart filter tracking keeps quality stable with timely service and replacements.",
   },
 ];
 
@@ -70,20 +74,6 @@ const testimonials = [
   },
 ];
 
-const fadeInUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0 },
-};
-
-const stagger = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-};
-
 function Icon({ type }: { type: string }) {
   if (type === "sense") {
     return (
@@ -94,7 +84,6 @@ function Icon({ type }: { type: string }) {
       </svg>
     );
   }
-
   if (type === "flow") {
     return (
       <svg aria-hidden="true" viewBox="0 0 48 48">
@@ -104,7 +93,6 @@ function Icon({ type }: { type: string }) {
       </svg>
     );
   }
-
   return (
     <svg aria-hidden="true" viewBox="0 0 48 48">
       <path d="M24 5c7 8 14 15 14 25a14 14 0 0 1-28 0C10 20 17 13 24 5Z" />
@@ -113,55 +101,11 @@ function Icon({ type }: { type: string }) {
   );
 }
 
-function MotionSection({
-  id,
-  eyebrow,
-  title,
-  children,
-}: {
-  id: string;
-  eyebrow: string;
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section id={id} className="section">
-      <motion.div
-        className="section-header"
-        variants={fadeInUp}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.35 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-      >
-        <p className="badge">{eyebrow}</p>
-        <h2>{title}</h2>
-      </motion.div>
-      {children}
-    </section>
-  );
-}
-
 export default function Home() {
-  const prefersReducedMotion = useReducedMotion();
-  const { scrollY } = useScroll();
-  const navBackground = useTransform(
-    scrollY,
-    [0, 96],
-    ["rgba(10, 13, 15, 0.72)", "rgba(10, 13, 15, 0.94)"],
-  );
-  const navBorder = useTransform(
-    scrollY,
-    [0, 96],
-    ["rgba(30, 37, 41, 0)", "rgba(30, 37, 41, 1)"],
-  );
-
   return (
     <main className="site-shell">
-      <motion.nav
-        className="nav"
-        style={{ backgroundColor: navBackground, borderColor: navBorder }}
-      >
+      {/* Nav */}
+      <nav className="nav" id="nav-root">
         <a className="brand" href="#top" aria-label="Aqua Nord home">
           <span className="brand-mark" />
           Aqua Nord
@@ -173,86 +117,34 @@ export default function Home() {
             </a>
           ))}
         </div>
-        <motion.a
-          className="button button-primary nav-cta"
-          href="#contact"
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.98 }}
-          transition={{ duration: 0.2 }}
-        >
+        <a className="button button-primary nav-cta" href="#contact">
           Book consult
-        </motion.a>
-      </motion.nav>
+        </a>
+      </nav>
 
+      {/* Hero */}
       <section id="top" className="hero">
         <div className="hero-copy">
-          <motion.p
-            className="badge"
-            variants={fadeInUp}
-            initial="hidden"
-            animate="visible"
-            transition={{ duration: 0.6, ease: "easeOut" }}
-          >
-            Scandinavian water purification
-          </motion.p>
-          <motion.h1
-            variants={fadeInUp}
-            initial="hidden"
-            animate="visible"
-            transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
-          >
-            Pure water, engineered for quiet luxury.
-          </motion.h1>
-          <motion.p
-            className="hero-text"
-            variants={fadeInUp}
-            initial="hidden"
-            animate="visible"
-            transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-          >
+          <p className="badge">Scandinavian water purification</p>
+          <h1>Pure water, engineered for quiet luxury.</h1>
+          <p className="hero-text">
             Aqua Nord brings precise Nordic filtration into refined homes,
             balancing measurable purity with calm, minimal design.
-          </motion.p>
-          <motion.div
-            className="hero-actions"
-            variants={fadeInUp}
-            initial="hidden"
-            animate="visible"
-            transition={{ duration: 0.6, ease: "easeOut", delay: 0.3 }}
-          >
-            <motion.a
-              className="button button-primary"
-              href="#contact"
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.98 }}
-              transition={{ duration: 0.2 }}
-            >
+          </p>
+          <div className="hero-actions">
+            <a className="button button-primary" href="#contact">
               Design my system
-            </motion.a>
-            <motion.a
-              className="button button-ghost"
-              href="#process"
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.98 }}
-              transition={{ duration: 0.2 }}
-            >
+            </a>
+            <a className="button button-ghost" href="#process">
               See the process
-            </motion.a>
-          </motion.div>
+            </a>
+          </div>
         </div>
 
-        <motion.div
-          className="hero-visual"
-          aria-hidden="true"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut", delay: 0.25 }}
-        >
-          <motion.svg
+        <div className="hero-visual" aria-hidden="true">
+          <svg
             className="water-ring"
             viewBox="0 0 520 520"
-            animate={prefersReducedMotion ? {} : { rotate: 360 }}
-            transition={{ duration: 34, repeat: Infinity, ease: "linear" }}
           >
             <defs>
               <linearGradient id="aquaLine" x1="0" x2="1" y1="0" y2="1">
@@ -263,132 +155,92 @@ export default function Home() {
             <circle cx="260" cy="260" r="190" />
             <path d="M104 268c54-78 105 74 161-3s102-16 151-23" />
             <path d="M135 329c41-47 83 34 132-12s87-15 116-9" />
-          </motion.svg>
-          <motion.div
-            className="water-drop"
-            animate={prefersReducedMotion ? {} : { y: [0, -16, 0] }}
-            transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </motion.div>
+          </svg>
+          <div className="water-drop" />
+        </div>
       </section>
 
-      <motion.section
-        className="stats-bar"
-        variants={stagger}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.35 }}
-      >
+      {/* Stats */}
+      <section className="stats-bar" aria-label="Key statistics">
         {stats.map((stat) => (
-          <motion.div key={stat.label} variants={fadeInUp} transition={{ duration: 0.6 }}>
+          <div key={stat.label}>
             <strong>{stat.value}</strong>
             <span>{stat.label}</span>
-          </motion.div>
+          </div>
         ))}
-      </motion.section>
+      </section>
 
-      <MotionSection id="purity" eyebrow="Purity system" title="Filtration that disappears into daily life.">
-        <motion.div
-          className="feature-grid"
-          variants={stagger}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.25 }}
-        >
+      {/* Features */}
+      <section id="purity" className="section">
+        <div className="section-header">
+          <p className="badge">Purity system</p>
+          <h2>Filtration that disappears into daily life.</h2>
+        </div>
+        <div className="feature-grid">
           {features.map((feature) => (
-            <motion.article
-              className="card feature-card"
-              key={feature.title}
-              variants={fadeInUp}
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.2 }}
-            >
+            <article className="card feature-card" key={feature.title}>
               <div className="icon-shell">
                 <Icon type={feature.icon} />
               </div>
               <h3>{feature.title}</h3>
               <p>{feature.description}</p>
-            </motion.article>
+            </article>
           ))}
-        </motion.div>
-      </MotionSection>
+        </div>
+      </section>
 
-      <MotionSection id="process" eyebrow="How it works" title="Three clear steps from source to glass.">
-        <motion.div
-          className="steps"
-          variants={stagger}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.25 }}
-        >
+      {/* Process */}
+      <section id="process" className="section">
+        <div className="section-header">
+          <p className="badge">How it works</p>
+          <h2>Three clear steps from source to glass.</h2>
+        </div>
+        <div className="steps">
           {steps.map((step) => (
-            <motion.article
-              className="step"
-              key={step.number}
-              variants={fadeInUp}
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.2 }}
-            >
+            <article className="step" key={step.number}>
               <span>{step.number}</span>
               <h3>{step.title}</h3>
               <p>{step.description}</p>
-            </motion.article>
+            </article>
           ))}
-        </motion.div>
-      </MotionSection>
+        </div>
+      </section>
 
-      <MotionSection id="stories" eyebrow="Testimonials" title="Specified by people who notice details.">
-        <motion.div
-          className="testimonial-grid"
-          variants={stagger}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.25 }}
-        >
+      {/* Testimonials */}
+      <section id="stories" className="section">
+        <div className="section-header">
+          <p className="badge">Testimonials</p>
+          <h2>Specified by people who notice details.</h2>
+        </div>
+        <div className="testimonial-grid">
           {testimonials.map((testimonial) => (
-            <motion.figure
-              className="card testimonial"
-              key={testimonial.name}
-              variants={fadeInUp}
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.2 }}
-            >
+            <figure className="card testimonial" key={testimonial.name}>
               <blockquote>{testimonial.quote}</blockquote>
               <figcaption>
                 <strong>{testimonial.name}</strong>
                 <span>{testimonial.role}</span>
               </figcaption>
-            </motion.figure>
+            </figure>
           ))}
-        </motion.div>
-      </MotionSection>
+        </div>
+      </section>
 
+      {/* CTA */}
       <section id="contact" className="section">
-        <motion.div
-          className="cta"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.35 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-        >
+        <div className="cta">
           <p className="badge">Private consultation</p>
           <h2>Bring Nordic-grade water into your home.</h2>
           <p>
             Start with a source-water analysis and receive a discreet system
             plan built around your space, pressure, and taste profile.
           </p>
-          <motion.a
-            className="button button-primary"
-            href="mailto:studio@aquanord.example"
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.98 }}
-            transition={{ duration: 0.2 }}
-          >
+          <a className="button button-primary" href="mailto:studio@aquanord.example">
             Request analysis
-          </motion.a>
-        </motion.div>
+          </a>
+        </div>
       </section>
 
+      {/* Footer */}
       <footer className="footer">
         <a className="brand" href="#top" aria-label="Aqua Nord home">
           <span className="brand-mark" />
@@ -402,6 +254,11 @@ export default function Home() {
         </div>
         <p>© 2026 Aqua Nord. All rights reserved.</p>
       </footer>
+
+      {/* Animations: client-only, loads after content is visible */}
+      <Suspense fallback={null}>
+        <AnimationLayer />
+      </Suspense>
     </main>
   );
 }
