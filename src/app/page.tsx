@@ -2,35 +2,28 @@
 // AnimationLayer is a separate client chunk loaded after JS parses.
 import { Suspense } from "react";
 import AnimationLayer from "@/components/AnimationLayer";
+import homeContent from "../../content/pages/home.json";
 
 const navLinks = ["Purity", "Process", "Stories", "Contact"];
 
-const stats = [
-  { value: "99.97%", label: "Certified purity", number: "99.97", suffix: "%" },
-  { value: "120+", label: "Countries served", number: "120", suffix: "+" },
-  { value: "25 yrs", label: "Nordic engineering", number: "25", suffix: " yrs" },
-];
+const statCountPattern = /^(\d+(?:\.\d+)?)(.*)$/;
 
-const features = [
-  {
-    title: "Arctic carbon core",
-    description:
-      "Multi-stage carbon filtration removes chlorine, sediment, and micro-particles while preserving a clean mineral profile.",
-    icon: "core",
-  },
-  {
-    title: "Continuous purity sensing",
-    description:
-      "Inline sensors monitor water quality in real time and alert you before performance drops.",
-    icon: "sense",
-  },
-  {
-    title: "Low-waste flow design",
-    description:
-      "A pressure-balanced system minimizes wastewater without compromising taste or throughput.",
-    icon: "flow",
-  },
-];
+const stats = homeContent.stats.map((stat) => {
+  const countParts = stat.value.match(statCountPattern);
+
+  return {
+    ...stat,
+    number: countParts?.[1] ?? stat.value,
+    suffix: countParts?.[2] ?? "",
+  };
+});
+
+const featureIcons = ["core", "sense", "flow"] as const;
+
+const features = homeContent.features.map((feature, index) => ({
+  ...feature,
+  icon: featureIcons[index] ?? "core",
+}));
 
 const steps = [
   {
@@ -50,33 +43,6 @@ const steps = [
     title: "Maintain",
     description:
       "Smart filter tracking keeps quality stable with timely service and replacements.",
-  },
-];
-
-const collectionCards = [
-  {
-    title: "Glacier Reserve",
-    description:
-      "A mineral-balanced profile inspired by slow meltwater and quiet alpine stone.",
-    meta: "Silica-rich finish",
-  },
-  {
-    title: "Fjord Current",
-    description:
-      "High-flow filtration tuned for kitchens where purity has to keep pace.",
-    meta: "6.2 L/min peak flow",
-  },
-  {
-    title: "Pine Canopy",
-    description:
-      "Carbon clarity with a soft, forest-clean taste for espresso and still water.",
-    meta: "Low-chlorine profile",
-  },
-  {
-    title: "Northern Spring",
-    description:
-      "A compact under-counter system built for apartments and refined retreats.",
-    meta: "Silent service core",
   },
 ];
 
@@ -163,12 +129,9 @@ export default function Home() {
 
         <div className="hero-copy">
           <p className="badge hero-stagger-item">Scandinavian water purification</p>
-          <h1 className="hero-stagger-item hero-scramble" data-text="Pure water, engineered for quiet luxury.">
-            Pure water, engineered for quiet luxury.
-          </h1>
+          <h1 className="hero-stagger-item">{homeContent.hero.headline}</h1>
           <p className="hero-text hero-stagger-item">
-            Aqua Nord brings precise Nordic filtration into refined homes,
-            balancing measurable purity with calm, minimal design.
+            {homeContent.hero.subtext}
           </p>
           <div className="hero-actions hero-stagger-item">
             <a className="button button-primary" href="#contact">
@@ -246,28 +209,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Collection */}
-      <section id="collection" className="collection-section">
-        <div className="collection-sticky">
-          <div className="section-header collection-header">
-            <p className="badge">Nature collection</p>
-            <h2>Four water profiles, tuned for the rhythm of the home.</h2>
-          </div>
-          <div className="collection-window">
-            <div className="collection-track">
-              {collectionCards.map((card, index) => (
-                <article className="collection-card card" key={card.title}>
-                  <span>{String(index + 1).padStart(2, "0")}</span>
-                  <h3>{card.title}</h3>
-                  <p>{card.description}</p>
-                  <strong>{card.meta}</strong>
-                </article>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Testimonials */}
       <section id="stories" className="section">
         <div className="section-header">
@@ -291,11 +232,8 @@ export default function Home() {
       <section id="contact" className="section">
         <div className="cta">
           <p className="badge">Private consultation</p>
-          <h2>Bring Nordic-grade water into your home.</h2>
-          <p>
-            Start with a source-water analysis and receive a discreet system
-            plan built around your space, pressure, and taste profile.
-          </p>
+          <h2>{homeContent.cta.headline}</h2>
+          <p>{homeContent.cta.subtext}</p>
           <a className="button button-primary" href="mailto:studio@aquanord.example">
             Request analysis
           </a>

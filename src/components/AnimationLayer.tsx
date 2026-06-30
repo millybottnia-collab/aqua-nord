@@ -13,7 +13,6 @@ import {
 } from "framer-motion";
 
 const navLinks = ["Purity", "Process", "Stories", "Contact"];
-const scrambleChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 function useIsDesktop() {
   const [isDesktop, setIsDesktop] = useState(false);
@@ -196,44 +195,6 @@ function HeroStaggerEntrance() {
   );
 }
 
-function TextScramble() {
-  const reduced = useReducedMotion();
-
-  useEffect(() => {
-    if (reduced) return;
-    const headline = document.querySelector<HTMLElement>(".hero-scramble");
-    if (!headline) return;
-
-    const finalText = headline.dataset.text || headline.textContent || "";
-    const duration = 1500;
-    const start = performance.now();
-    let frame = 0;
-
-    const tick = (time: number) => {
-      const progress = Math.min(1, (time - start) / duration);
-      const resolved = Math.floor(progress * finalText.length);
-      headline.textContent = finalText
-        .split("")
-        .map((char, index) => {
-          if (char === " " || index < resolved) return char;
-          return scrambleChars[Math.floor(Math.random() * scrambleChars.length)];
-        })
-        .join("");
-
-      if (progress < 1) {
-        frame = requestAnimationFrame(tick);
-      } else {
-        headline.textContent = finalText;
-      }
-    };
-
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
-  }, [reduced]);
-
-  return null;
-}
-
 function MagneticNavLink({ label }: { label: string }) {
   const reduced = useReducedMotion();
   const x = useMotionValue(0);
@@ -374,55 +335,6 @@ function ParticleField() {
       context.clearRect(0, 0, width, height);
     };
   }, [isDesktop, reduced]);
-
-  return null;
-}
-
-function HorizontalCollectionScroll() {
-  const reduced = useReducedMotion();
-  const isDesktop = useIsDesktop();
-  const progress = useMotionValue(0);
-  const [distance, setDistance] = useState(0);
-  const x = useTransform(progress, [0, 1], [0, -distance]);
-
-  useEffect(() => {
-    if (reduced || !isDesktop) return;
-    const section = document.getElementById("collection");
-    const track = document.querySelector<HTMLElement>(".collection-track");
-    if (!section || !track) return;
-
-    const update = () => {
-      const travel = Math.max(0, track.scrollWidth - section.clientWidth);
-      setDistance(travel);
-      section.style.minHeight = `${window.innerHeight + travel + 420}px`;
-    };
-    const onScroll = () => {
-      const rect = section.getBoundingClientRect();
-      const total = Math.max(1, section.offsetHeight - window.innerHeight);
-      progress.set(Math.min(1, Math.max(0, -rect.top / total)));
-    };
-
-    update();
-    onScroll();
-    window.addEventListener("resize", update);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("resize", update);
-      window.removeEventListener("scroll", onScroll);
-      section.style.minHeight = "";
-      track.style.transform = "";
-    };
-  }, [isDesktop, progress, reduced]);
-
-  useEffect(() => {
-    if (reduced || !isDesktop) return;
-    const track = document.querySelector<HTMLElement>(".collection-track");
-    if (!track) return;
-    const unsubscribe = x.on("change", (value) => {
-      track.style.transform = `translate3d(${value}px, 0, 0)`;
-    });
-    return unsubscribe;
-  }, [isDesktop, reduced, x]);
 
   return null;
 }
@@ -593,7 +505,7 @@ function SectionReveal() {
 
   useEffect(() => {
     if (reduced) return;
-    const sections = document.querySelectorAll<HTMLElement>(".section, .stats-bar, .collection-section");
+    const sections = document.querySelectorAll<HTMLElement>(".section, .stats-bar");
     sections.forEach((section) => {
       section.style.opacity = "0";
       section.style.transform = "translateY(40px)";
@@ -672,10 +584,8 @@ export default function AnimationLayer() {
       <NavScroller />
       <HeroParallax />
       <HeroStaggerEntrance />
-      <TextScramble />
       {magneticLinks}
       <ParticleField />
-      <HorizontalCollectionScroll />
       <AnimatedCounters />
       <MagneticButtons />
       <WaterRipples />

@@ -1,0 +1,38 @@
+{
+  "hero": {
+    "headline": "Pure water, engineered for quiet luxury.",
+    "subtext": "Aqua Nord brings precise Nordic filtration into refined homes, balancing measurable purity with calm, minimal design."
+  },
+  "stats": [
+    {
+      "value": "99.97%",
+      "label": "Certified purity"
+    },
+    {
+      "value": "120+",
+      "label": "Countries served"
+    },
+    {
+      "value": "25 yrs",
+      "label": "Nordic engineering"
+    }
+  ],
+  "features": [
+    {
+      "title": "Arctic carbon core",
+      "description": "Multi-stage carbon filtration removes chlorine, sediment, and micro-particles while preserving a clean mineral profile."
+    },
+    {
+      "title": "Continuous purity sensing",
+      "description": "Inline sensors monitor water quality in real time and alert you before performance drops."
+    },
+    {
+      "title": "Low-waste flow design",
+      "description": "A pressure-balanced system minimizes wastewater without compromising taste or throughput."
+    }
+  ],
+  "cta": {
+    "headline": "Bring Nordic-grade water into your home.",
+    "subtext": "Start with a source-water analysis and receive a discreet system plan built around your space, pressure, and taste profile."
+  }
+}
