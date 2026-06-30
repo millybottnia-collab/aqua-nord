@@ -124,6 +124,16 @@ export default function Home() {
 
       {/* Hero */}
       <section id="top" className="hero">
+        {/* Parallax background image */}
+        <div className="hero-bg-wrap" aria-hidden="true">
+          <div
+            id="hero-bg-layer"
+            className="hero-bg-img"
+            style={{ backgroundImage: "url('/hero-bg.jpg')" }}
+          />
+          <div id="hero-overlay" className="hero-bg-overlay" />
+        </div>
+
         <div className="hero-copy">
           <p className="badge">Scandinavian water purification</p>
           <h1>Pure water, engineered for quiet luxury.</h1>
@@ -142,10 +152,7 @@ export default function Home() {
         </div>
 
         <div className="hero-visual" aria-hidden="true">
-          <svg
-            className="water-ring"
-            viewBox="0 0 520 520"
-          >
+          <svg className="water-ring" viewBox="0 0 520 520">
             <defs>
               <linearGradient id="aquaLine" x1="0" x2="1" y1="0" y2="1">
                 <stop stopColor="#3a9ed9" />

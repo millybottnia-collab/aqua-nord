@@ -169,6 +169,38 @@ button:focus-visible {
   min-height: auto;
   margin: 0 auto;
   padding: 80px var(--page-padding) 48px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Hero background parallax layers */
+.hero-bg-wrap {
+  position: absolute;
+  inset: -20% -5%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero-bg-img {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center 30%;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.hero-bg-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg,
+      rgba(10,13,15,0.55) 0%,
+      rgba(10,13,15,0.45) 40%,
+      rgba(10,13,15,0.85) 80%,
+      rgba(10,13,15,1) 100%
+    ),
+    radial-gradient(ellipse at 60% 40%, rgba(58,158,217,0.18), transparent 60%);
 }
 
 .hero-copy {
@@ -237,6 +269,7 @@ h3 {
 
 .hero-visual {
   position: relative;
+  z-index: 2;
   min-height: 280px;
   margin-top: 40px;
 }
@@ -446,6 +479,19 @@ h3 {
   position: relative;
   overflow: hidden;
   padding: 48px 32px;
+  background-image: url('/water-texture.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(135deg, rgba(10,13,15,0.92) 0%, rgba(17,21,24,0.88) 100%),
+    radial-gradient(ellipse at 80% 20%, rgba(58,158,217,0.2), transparent 55%);
+  z-index: 0;
 }
 
 .cta > * {
