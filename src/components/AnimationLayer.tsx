@@ -43,39 +43,6 @@ function HeroParallax() {
   return <div ref={ref} style={{ position: "absolute", inset: 0, pointerEvents: "none" }} />;
 }
 
-// ─── 3. Cursor glow (desktop only) ────────────────────────────────────────────
-function CursorGlow() {
-  const reduced = useReducedMotion();
-  const mouseX = useMotionValue(-300);
-  const mouseY = useMotionValue(-300);
-  const springX = useSpring(mouseX, { damping: 25, stiffness: 150, mass: 0.5 });
-  const springY = useSpring(mouseY, { damping: 25, stiffness: 150, mass: 0.5 });
-
-  useEffect(() => {
-    if (reduced) return;
-    if (typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches) return;
-    const onMove = (e: MouseEvent) => { mouseX.set(e.clientX); mouseY.set(e.clientY); };
-    window.addEventListener("mousemove", onMove);
-    return () => window.removeEventListener("mousemove", onMove);
-  }, [mouseX, mouseY, reduced]);
-
-  if (reduced) return null;
-
-  return (
-    <motion.div
-      aria-hidden="true"
-      style={{
-        position: "fixed", top: 0, left: 0,
-        x: springX, y: springY,
-        translateX: "-50%", translateY: "-50%",
-        width: 400, height: 400,
-        borderRadius: "50%", pointerEvents: "none", zIndex: 1,
-        background: "radial-gradient(circle at center, rgba(58,158,217,0.10) 0%, rgba(45,212,164,0.05) 40%, transparent 70%)",
-      }}
-    />
-  );
-}
-
 // ─── 4. Water ripple on click ─────────────────────────────────────────────────
 function WaterRipples() {
   const reduced = useReducedMotion();
@@ -351,7 +318,6 @@ export default function AnimationLayer() {
   return (
     <>
       <ScrollProgressBar />
-      <CursorGlow />
       <WaterParticles />
       <NavScroller />
       <HeroParallax />
