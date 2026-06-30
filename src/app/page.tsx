@@ -6,9 +6,9 @@ import AnimationLayer from "@/components/AnimationLayer";
 const navLinks = ["Purity", "Process", "Stories", "Contact"];
 
 const stats = [
-  { value: "99.97%", label: "Certified purity" },
-  { value: "120+", label: "Countries served" },
-  { value: "25 yrs", label: "Nordic engineering" },
+  { value: "99.97%", label: "Certified purity", number: "99.97", suffix: "%" },
+  { value: "120+", label: "Countries served", number: "120", suffix: "+" },
+  { value: "25 yrs", label: "Nordic engineering", number: "25", suffix: " yrs" },
 ];
 
 const features = [
@@ -50,6 +50,33 @@ const steps = [
     title: "Maintain",
     description:
       "Smart filter tracking keeps quality stable with timely service and replacements.",
+  },
+];
+
+const collectionCards = [
+  {
+    title: "Glacier Reserve",
+    description:
+      "A mineral-balanced profile inspired by slow meltwater and quiet alpine stone.",
+    meta: "Silica-rich finish",
+  },
+  {
+    title: "Fjord Current",
+    description:
+      "High-flow filtration tuned for kitchens where purity has to keep pace.",
+    meta: "6.2 L/min peak flow",
+  },
+  {
+    title: "Pine Canopy",
+    description:
+      "Carbon clarity with a soft, forest-clean taste for espresso and still water.",
+    meta: "Low-chlorine profile",
+  },
+  {
+    title: "Northern Spring",
+    description:
+      "A compact under-counter system built for apartments and refined retreats.",
+    meta: "Silent service core",
   },
 ];
 
@@ -112,7 +139,7 @@ export default function Home() {
         </a>
         <div className="nav-links" aria-label="Primary navigation">
           {navLinks.map((link) => (
-            <a key={link} href={`#${link.toLowerCase()}`}>
+            <a className="magnetic-link" key={link} href={`#${link.toLowerCase()}`}>
               {link}
             </a>
           ))}
@@ -135,13 +162,15 @@ export default function Home() {
         </div>
 
         <div className="hero-copy">
-          <p className="badge">Scandinavian water purification</p>
-          <h1>Pure water, engineered for quiet luxury.</h1>
-          <p className="hero-text">
+          <p className="badge hero-stagger-item">Scandinavian water purification</p>
+          <h1 className="hero-stagger-item hero-scramble" data-text="Pure water, engineered for quiet luxury.">
+            Pure water, engineered for quiet luxury.
+          </h1>
+          <p className="hero-text hero-stagger-item">
             Aqua Nord brings precise Nordic filtration into refined homes,
             balancing measurable purity with calm, minimal design.
           </p>
-          <div className="hero-actions">
+          <div className="hero-actions hero-stagger-item">
             <a className="button button-primary" href="#contact">
               Design my system
             </a>
@@ -165,13 +194,17 @@ export default function Home() {
           </svg>
           <div className="water-drop" />
         </div>
+
+        <canvas id="particle-canvas" aria-hidden="true" />
       </section>
 
       {/* Stats */}
       <section className="stats-bar" aria-label="Key statistics">
         {stats.map((stat) => (
           <div key={stat.label}>
-            <strong>{stat.value}</strong>
+            <strong data-count-to={stat.number} data-count-suffix={stat.suffix}>
+              {stat.value}
+            </strong>
             <span>{stat.label}</span>
           </div>
         ))}
@@ -210,6 +243,28 @@ export default function Home() {
               <p>{step.description}</p>
             </article>
           ))}
+        </div>
+      </section>
+
+      {/* Collection */}
+      <section id="collection" className="collection-section">
+        <div className="collection-sticky">
+          <div className="section-header collection-header">
+            <p className="badge">Nature collection</p>
+            <h2>Four water profiles, tuned for the rhythm of the home.</h2>
+          </div>
+          <div className="collection-window">
+            <div className="collection-track">
+              {collectionCards.map((card, index) => (
+                <article className="collection-card card" key={card.title}>
+                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  <h3>{card.title}</h3>
+                  <p>{card.description}</p>
+                  <strong>{card.meta}</strong>
+                </article>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
